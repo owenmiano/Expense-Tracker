@@ -7,10 +7,11 @@ import { useContext } from "react"
 import { AuthContext } from "./context/AuthContext"
 import Register from "./pages/Register";
 import NavBar from "./components/Navbar";
+import { TransacContextProvider } from "./context/TransacContext";
 function App() {
   const {user}=useContext(AuthContext)
   return (
-    <>
+    <TransacContextProvider user={user}>
     <NavBar/>
     <Container className="text-secondary">
     <Routes>
@@ -20,7 +21,7 @@ function App() {
       <Route path="*" element={<Navigate to="/"/>} />
     </Routes>
     </Container>
-        </>
+    </TransacContextProvider>
   );
 }
 

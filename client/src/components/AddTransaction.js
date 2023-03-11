@@ -1,21 +1,25 @@
 import React,{useState,useContext} from 'react'
-import {GlobalContext} from '../context/GlobalState'
+import {TransacContext} from '../context/TransacContext'
+import {Alert} from "react-bootstrap"
+import { AuthContext } from '../context/AuthContext';
 
 function AddTransaction() {
  const [text,setText]=useState('');
  const [amount,setAmount]=useState(0);
 
- const {addTransaction}=useContext(GlobalContext)
-
+ const {addTransaction,newtransacError}=useContext(TransacContext)
+ const {user}=useContext(AuthContext)
 const addNewTransaction =(e)=>{
        e.preventDefault();
 
     const newTransaction={
-      id:Math.floor(Math.random()*1000000000),
+      userId:user._id,
       text,
       amount:+amount
     }
     addTransaction(newTransaction)
+    setText("")
+    setAmount(0)
 }
 
  return (
@@ -23,6 +27,7 @@ const addNewTransaction =(e)=>{
     <h3>Add new transaction</h3>
       <form onSubmit={addNewTransaction}>
         <div className="form-control">
+        {newtransacError &&  <Alert variant='danger'><p>{newtransacError}</p></Alert>}
           <label htmlFor="text">Text</label>
           <input type="text" value={text} onChange={(e)=>setText(e.target.value)} placeholder="Enter text..." />
         </div>
