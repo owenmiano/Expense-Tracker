@@ -5,63 +5,30 @@ exports.getTransactions=async(req,res)=>{
 
    try {
     const allTransactions=await Transaction.find({userId})
-    return res.status(200).json({
-        success:true,
-        count: allTransactions.length,
-        data:allTransactions
-    })
+    return res.status(200).json(allTransactions)
    } catch (error) {
-      return res.status(500).json({
-        success:false,
-        error:'server error'
-      })
+      return res.status(500).json({message:"Unable to retrieve transactions"})
    }
  }
 // add new transaction
 exports.addTransaction=async(req,res)=>{
 try {
     const {userId,text,amount}=req.body;
+    if(!text || !amount) return res.status(403).json({message:"All fields are required"})
     const newTransaction=await Transaction.create(req.body)
-    return res.status(201).json({
-        success:true,
-        data:newTransaction
-    })
+    return res.status(201).json(newTransaction)
 
-} catch (err) {
-    if(err.name==='ValidationError'){
-      const messages=Object.values(err.errors).map(val=>val.message)
-      return res.status(400).json({
-        success:false,
-        error:messages}
-        ) 
-    }
-   else{ 
-    return res.status(500).json({
-        success:false,
-        error:'server error'
-      })
-    }
+} catch (error) {
+  return res.status(500).json({message:"Unable to create transaction"})
 }
 }
 // delete transaction
 exports.deleteTransaction=async(req,res)=>{
 try {
   const transaction = await Transaction.findById(req.params.id)
-  if(!transaction){
-    return res.status(404).json({
-        success:false,
-        error:`No Transaction with the id ${req.params.id} `
-    })
-  }
   await transaction.remove();
-  res.status(200).json({
-    success:true,
-    data:{}
-})
+  return res.status(200).json({message:`Transaction has been deleted successfully`})  
 } catch (error) {
-    return res.status(500).json({
-        success:false,
-        error:'server error'
-      })
+    return res.status(500).json({message:"Unable to delete transaction"})
 }   
 }
