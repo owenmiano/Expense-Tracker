@@ -29,7 +29,7 @@ function Register() {
             />
           
            <Form.Control
-            type="passowrd"
+            type="password"
             placeholder="Password"
             onChange={(e)=>updateRegisterInfo({...registerInfo,password: e.target.value})}
 

@@ -8,7 +8,7 @@ import TransactionList from '../components/TransactionList';
 function Home() {
   return (
 
-      <div className='container'>
+      <div className='cont'>
          <Balance/>
          <IncomeExpenses/>
          <TransactionList/>
