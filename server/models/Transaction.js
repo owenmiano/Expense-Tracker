@@ -12,9 +12,9 @@ const TransactionSchema=new mongoose.Schema({
         type:Number,
         required:[true,'Please add a positive or negative number']
     },
-    createdAt:{
-        type:String,
-        default:new Date().toLocaleString(undefined, {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute:'2-digit'})
-    }
+},
+
+{   
+     timestamps:true
 })
 module.exports=mongoose.model('Transaction',TransactionSchema)
