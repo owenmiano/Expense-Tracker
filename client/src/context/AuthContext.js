@@ -41,7 +41,7 @@ export const AuthContextProvider = ({ children }) => {
         }
       );
       let userInfo = response.data;
-      localStorage.setItem("User", JSON.stringify(userInfo));
+      localStorage.setItem("User", JSON.stringify(userInfo.userName));
       setIsLoading(false);
       setUser(userInfo);
     } catch (error) {
@@ -72,7 +72,7 @@ export const AuthContextProvider = ({ children }) => {
         }
       );
       let userInfo = response.data;
-      localStorage.setItem("User", JSON.stringify(userInfo));
+      localStorage.setItem("User", JSON.stringify(userInfo.userName));
       setUser(userInfo);
       setIsLoading(false);
       console.log(userInfo);
