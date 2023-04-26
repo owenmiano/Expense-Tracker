@@ -37,7 +37,6 @@ if(process.env.NODE_ENV ==='production'){
 
 // Test database connection
 mongoose.connection.once('open',()=>{
-    console.log(`Connected Successfully to the Database: ${mongoose.connection.name}`)
     app.listen(port, console.log(`Server is running in ${process.env.NODE_ENV} mode on port:${port}`))
 
 })

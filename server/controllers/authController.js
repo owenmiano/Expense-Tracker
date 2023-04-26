@@ -1,6 +1,7 @@
 const bcrypt=require("bcrypt")
 const Users=require('../models/User');
 const  JWT =require('jsonwebtoken')
+const validator = require("validator");
 
 
 // User Registration Route
@@ -10,6 +11,13 @@ exports.registerUser=async(req,res)=>{
      const {password,email,userName}=req.body
      if(!email || !password || !userName) return res.status(403).json({message:"All fields are required"})
 
+
+     // validate email
+     if(!validator.isEmail(email)) return res.status(403).json({message:"Enter a valid email"})
+     // validate password
+     if(!validator.isStrongPassword(password)) return res.status(403).json({message:"Password should be at least 8 characters long, A mixture of both uppercase and lowercase letters.A mixture of letters and numbers.Inclusion of at least one special character, e.g., ! @ # ?"})
+    
+    
      // validate email
      const emailExist=await Users.findOne({email});
      if(emailExist){
@@ -48,6 +56,9 @@ exports.loginUser=async(req,res)=>{
 
  if(!email || !password) return res.status(403).json({message:"All fields are required"})
    // first check if the email exists in the database
+   if(!validator.isEmail(email)) return res.status(403).json({message:"Enter a valid email"})
+   // validate password
+  
    try {
     const user=await Users.findOne({email:req.body.email})
     if(!user){
@@ -74,7 +85,6 @@ exports.loginUser=async(req,res)=>{
 
      return res.status(200).json({message:"Hurray! You are now logged in",...others})
    } catch (error) {
-    console.log(error.message)
     return res.status(500).json({message:"Unable to Login to your account"})
 
    }
