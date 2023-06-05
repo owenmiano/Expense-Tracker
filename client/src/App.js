@@ -8,6 +8,9 @@ import { AuthContext } from "./context/AuthContext"
 import Register from "./pages/Register";
 import NavBar from "./components/Navbar";
 import { TransacContextProvider } from "./context/TransacContext";
+import ForgotPassword from "./pages/ForgotPassword";
+import PrivateRoutes from "./utils/PrivateRoutes";
+
 function App() {
   const {user}=useContext(AuthContext)
   return (
@@ -15,10 +18,13 @@ function App() {
     <NavBar/>
     <Container className="text-secondary">
     <Routes>
-      <Route path="/" element={user ? <Home/> : <Login/>} />
-      <Route path="/register" element={user ? <Home/> : <Register/>} />
-      <Route path="/login" element={user ? <Home/> : <Login/>} />
+      <Route path="/register" element={<Register/>} />
+      <Route path="/login" element={<Login/>} />
       <Route path="*" element={<Navigate to="/"/>} />
+      <Route path="/forgotPassword" element={<ForgotPassword/>} />
+      <Route element={<PrivateRoutes user={user}/>}>
+              <Route path="/" element={<Home/>} />
+      </Route>
     </Routes>
     </Container>
     </TransacContextProvider>

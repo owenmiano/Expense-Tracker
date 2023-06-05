@@ -1,38 +1,26 @@
-import { createContext, useCallback, useEffect, useState } from "react";
+import { createContext, useCallback, useState } from "react";
 import axios from "axios";
 import { baseUrl } from "../utils/services";
+import { useNavigate} from 'react-router'
 
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
+  const navigate=useNavigate();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("User")) || null);
   const [registerError, setRegisterError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [registerInfo, setRegisterInfo] = useState({
-    userName: "",
-    email: "",
-    password: "",
-  });
-
-  const [loginInfo, setLoginInfo] = useState({
-    email: "",
-    password: "",
-  });
   const [loginError, setLoginError] = useState(null);
 
 
-  const updateRegisterInfo = useCallback((info) => {
-    setRegisterInfo(info);
-  }, []);
 
-  const registerUser = useCallback(async (e) => {
-    e.preventDefault();
+  const registerUser = useCallback(async (data) => {
     setIsLoading(true);
     setRegisterError(null);
     try {
       const response = await axios.post(
         `${baseUrl}/auth/register-user`,
-        JSON.stringify(registerInfo),
+        JSON.stringify(data),
         {
           headers: {
             "Content-Type": "application/json",
@@ -41,9 +29,17 @@ export const AuthContextProvider = ({ children }) => {
         }
       );
       let userInfo = response.data;
-      localStorage.setItem("User", JSON.stringify(userInfo.userName));
+      localStorage.setItem("User", JSON.stringify(
+        {
+          userName: userInfo.userName,
+          id: userInfo._id,
+          token: userInfo.token,
+          email: userInfo.email,
+        }
+      ));
       setIsLoading(false);
       setUser(userInfo);
+      navigate("/")
     } catch (error) {
       setIsLoading(false);
       console.log(error.response.data.message);
@@ -52,18 +48,15 @@ export const AuthContextProvider = ({ children }) => {
   });
 
   // LOGIN API
-  const updateLoginInfo = useCallback((info) => {
-    setLoginInfo(info);
-  }, []);
+ 
 
-  const loginUser = useCallback(async (e) => {
-    e.preventDefault();
+  const loginUser = useCallback(async (data) => {
     setIsLoading(true);
     setLoginError(null);
     try {
       const response = await axios.post(
         `${baseUrl}/auth/login-user`,
-        JSON.stringify(loginInfo),
+        JSON.stringify(data),
         {
           headers: {
             "Content-Type": "application/json",
@@ -72,9 +65,17 @@ export const AuthContextProvider = ({ children }) => {
         }
       );
       let userInfo = response.data;
-      localStorage.setItem("User", JSON.stringify(userInfo.userName));
+      localStorage.setItem("User", JSON.stringify(
+        {
+          userName: userInfo.userName,
+          id: userInfo._id,
+          token: userInfo.token,
+          email: userInfo.email,
+        }
+      ));
       setUser(userInfo);
       setIsLoading(false);
+      navigate("/")
       console.log(userInfo);
     } catch (error) {
       setIsLoading(false);
@@ -94,15 +95,11 @@ export const AuthContextProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
-        registerInfo,
-        updateRegisterInfo,
         registerUser,
         registerError,
         isLoading,
-        updateLoginInfo,
         loginError,
         logoutUser,
-        loginInfo,
         loginUser,
       }}
     >

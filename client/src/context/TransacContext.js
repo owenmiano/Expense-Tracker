@@ -7,17 +7,23 @@ export const TransacContext =createContext();
 
 export const TransacContextProvider =({children,user})=>{
 
-    const [transactions,setTransactions]=useState(null);
+    const [transactions,setTransactions]=useState([]);
     const [newtransacError,setNewTransacError]=useState(null);
     const [retrieveTransacError,setRetrieveTransacError]=useState(null);
     const [deleteTransacError,setDeleteTransacError]=useState(null);
-
+    const Token = user?.token;
     useEffect(()=>{
         const getTransactions =async()=>{
-            if(user?._id){
+            if(user?.id){
                 try {
                     setRetrieveTransacError(null)
-                    const response= await axios.get(`${baseUrl}/api/fetchTransactions/${user?._id}`) 
+                    const response= await axios.get(`${baseUrl}/api/fetchTransactions/${user?.id}`, {
+                        headers: {
+                          token: `Bearer ${Token}`,
+                          "Content-Type": "application/json",
+                          Accept: "application/json",
+                        },
+                      }) 
                     setTransactions(response.data)
 
                 } catch (error) {
@@ -37,6 +43,7 @@ export const TransacContextProvider =({children,user})=>{
             JSON.stringify(newTransaction),
             {
                 headers: {
+                token: `Bearer ${Token}`,
                 'Content-Type': "application/json",
                 'Accept': "application/json",
                 }  
