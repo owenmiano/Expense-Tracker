@@ -13,9 +13,14 @@ exports.getTransactions=async(req,res)=>{
 // add new transaction
 exports.addTransaction=async(req,res)=>{
 try {
-    const {userId,text,amount}=req.body;
+  const Id=req.user.id
+    const {text,amount}=req.body;
     if(!text || !amount) return res.status(403).json({message:"All fields are required"})
-    const newTransaction=await Transaction.create(req.body)
+    const newTransaction=await Transaction.create({
+      userId:Id,
+      text,
+      amount
+    })
     return res.status(201).json(newTransaction)
 
 } catch (error) {

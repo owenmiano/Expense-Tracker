@@ -41,7 +41,7 @@ exports.registerUser=async(req,res)=>{
           })
           const {password,...others}=newUser._doc
     
-         return res.status(201).json({message:`Hurray! you have registered successfully.`,...others})
+         return res.status(201).json({message:`Hurray! you have registered successfully.`,...others,token})
         } catch (error) {
           console.log(error.message)
           return res.status(500).json({message:"Unable to create your account"})
@@ -83,7 +83,7 @@ exports.loginUser=async(req,res)=>{
 })
      const {password,...others}=user._doc
 
-     return res.status(200).json({message:"Hurray! You are now logged in",...others})
+     return res.status(200).json({message:"Hurray! You are now logged in",...others,token})
    } catch (error) {
     return res.status(500).json({message:"Unable to Login to your account"})
 
